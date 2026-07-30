@@ -2,14 +2,18 @@
 
 Grok-native godspeed orchestrator (`xbgst`).
 
-## Hard locks (2026-07-30)
+## Hard locks
 
-- **Connector mandatory every round**
+- **Subagents** receive ONLY the short godspeed directive (4 rules + concurrent tools + Rust lock).
+- **Judge (xbgst)** alone runs the full trilogy (directive + filter + velocity).
+- **Connector** mandatory every round.
 - **distiller / scribe / executor / labrat** → grok-4.5-fast-low
 - **Language:** Rust only. No Python.
-- **Spawn:** fnm multishells preferred, pure-bash isolation fallback
-- Every agent receives godspeed injection
+- **Spawn:** fnm multishells preferred, pure-bash isolation fallback.
+- **Single activation** runs all rounds to frontier; no per-round user prompts.
 
 ## Install
 
-Copy into `.grok/skills/xbgst/SKILL.md`
+Copy `SKILL.md` (or the `xbgst/` directory) into `.grok/skills/xbgst/`.
+
+Repo: https://github.com/VeigaPunk/xbrd-grok
