@@ -1,6 +1,6 @@
 ---
 name: xbgst
-description: Godspeed orchestrator for Grok. Clone of xbrd-gdsp-fknpft with all agent roles mapped to grok models. Triggers on xbgst, xbgst command, godspeed-grok, or xbreed-godspeed-fknpft. Spawns the-planner with wwkd on round 0 then acts as the-judge for subsequent rounds. Every dispatched agent receives only the short godspeed directive. Judge alone holds full trilogy. Connector mandatory every round. distiller scribe executor labrat map to grok-4.5-fast-low. Only Rust. No Python. Spawn via fnm multishells or pure bash granularity.
+description: Godspeed orchestrator for Grok. Clone of xbrd-gdsp-fknpft with all agent roles mapped to grok models. Triggers on xbgst, xbgst command, godspeed-grok, or xbreed-godspeed-fknpft. Spawns the-planner with wwkd on round 0 then acts as the-judge for subsequent rounds. Every dispatched agent receives only the short godspeed directive. Judge alone holds full trilogy. Single activation runs all rounds to frontier; no per-round user prompts. Connector mandatory every round. distiller scribe executor labrat map to grok-4.5-fast-low. Only Rust. No Python. Spawn via fnm multishells or pure bash granularity.
 metadata:
   axis_family: orchestration
   model: grok
@@ -193,7 +193,7 @@ When the prompt contains "godspeed" or skill is activated via xbgst:
 
 **Round phases:** PROPOSE (parallel, must contain connector) → CROSS-CRITIQUE → PARETO FILTER (judge) → COMPILE (round summary). If any axis improved, dispatch next round immediately — do not pause to ask. Exit → final DRAFT with AXES FINAL STATE section.
 
-**Autonomous iteration:** Keep iterating until the frontier stops moving (no axis improved in the last round) or 4 rounds hit. Do not prompt for cleanup, next steps, or confirmation between rounds. User interrupt is the only control.
+**Autonomous iteration:** One activation = full multi-round loop. The judge orchestrates every round internally until the frontier is reached (zero axis improvement vs previous round) or the hard 4-round cap. Emit only the final DRAFT + AXES FINAL STATE. Never emit "Round N ready", "continuing", "will run", or any intermediate prompt that waits for user input. No input from the user is necessary after the initial trigger. User interrupt is the sole external control.
 
 **Anti-premature-halt:** After each round, compare Round N survivors to Round N−1; dispatch N+1 if any axis improved; exit only on true zero-improvement or hard round cap. Round 2 always runs.
 
