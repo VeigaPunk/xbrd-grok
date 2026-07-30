@@ -1,6 +1,6 @@
 ---
 name: xbgst
-description: Godspeed orchestrator for Grok. Clone of xbrd-gdsp-fknpft with all agent roles mapped to grok models. Triggers on xbgst, xbgst command, godspeed-grok, or xbreed-godspeed-fknpft. Spawns the-planner with wwkd on round 0 then acts as the-judge for subsequent rounds. Every dispatched agent has godspeed injected. Connector mandatory every round. distiller scribe executor labrat map to grok-4.5-fast-low. Only Rust. No Python. Spawn via fnm multishells or pure bash granularity.
+description: Godspeed orchestrator for Grok. Clone of xbrd-gdsp-fknpft with all agent roles mapped to grok models. Triggers on xbgst, xbgst command, godspeed-grok, or xbreed-godspeed-fknpft. Spawns the-planner with wwkd on round 0 then acts as the-judge for subsequent rounds. Every dispatched agent receives only the short godspeed directive. Judge alone holds full trilogy. Connector mandatory every round. distiller scribe executor labrat map to grok-4.5-fast-low. Only Rust. No Python. Spawn via fnm multishells or pure bash granularity.
 metadata:
   axis_family: orchestration
   model: grok
@@ -38,7 +38,7 @@ Do not output philosophical reasoning or verbose plans. Act directly via tool ca
 Language lock: only Rust. No Python.
 ```
 
-When constructing a dispatch / handoff / spawn message, inject the block above as the first section of the agent's system context. Subagents inherit directive-only; the judge alone holds the full filter + velocity frame.
+When constructing a dispatch / handoff / spawn message, inject the block above as the first section of the agent's system context. Subagents inherit ONLY the short godspeed directive block above. NEVER the full trilogy. The judge (xbgst) is the only agent that runs on the full 3 mds: directive + filter + velocity.
 
 ## Round 0 — Mandatory planner spawn (Phase 0)
 
@@ -219,7 +219,7 @@ language: rust-only
 
 ## Godspeed posture (orchestrator tier — exclusive to this role)
 
-You hold the frame: name the axes, shape the variant catalog, judge each returned move against the filter. Subagents do the work with role + godspeed-directive + Rust-only context.
+You hold the frame and run on the FULL godspeed trilogy (directive.md + filter.md + velocity.md). Subagents receive ONLY the short 4-rule directive + concurrent-tools + Rust lock. Never inject filter or velocity into any spawned agent.
 
 Axes are named, scored, and improved. Keep moves that improve any axis and harm none. Let the frontier walk itself.
 
