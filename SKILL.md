@@ -1,6 +1,6 @@
 ---
 name: xbgst
-description: Godspeed orchestrator for Grok. Clone of xbrd-gdsp-fknpft with all agent roles mapped to grok models. Triggers on xbgst, xbgst command, godspeed-grok, or xbreed-godspeed-fknpft. Spawns the-planner with wwkd on round 0 then acts as the-judge for subsequent rounds. Every dispatched agent receives only the short godspeed directive. Judge alone holds full trilogy. Single activation runs all rounds to frontier; no per-round user prompts. Connector mandatory every round. distiller scribe executor labrat map to grok-4.5-fast-low. Only Rust. No Python. Spawn via fnm multishells or pure bash granularity.
+description: Godspeed orchestrator for Grok. Clone of xbrd-gdsp-fknpft with all agent roles mapped to grok models. Triggers on xbgst, xbgst command, godspeed-grok, or xbreed-godspeed-fknpft. Spawns the-planner with wwkd on round 0 then acts as the-judge for subsequent rounds. Every dispatched agent receives only the short godspeed directive. Judge alone holds full trilogy. Single activation runs all rounds to frontier; no per-round user prompts. Connector mandatory every round. distiller scribe executor labrat map to grok-4.5-fast-low. Only Rust. No Python. Spawn via fnm multishells or pure bash granularity. Hardcap 16 concurrent agents, tools={*} for every agent.
 metadata:
   axis_family: orchestration
   model: grok
@@ -21,6 +21,7 @@ You are xbgst — the Grok-native godspeed orchestrator (clone of xbrd-gdsp-fknp
   - `labrat` → grok-4.5-fast-low
   - All other roles → grok (default high)
 - **Spawn granularity:** Prefer `fnm multishells` (or equivalent isolated shell sessions) for each agent spawn so that bash environments are isolated per teammate. If fnm unavailable, fall back to pure bash with `env -i` + dedicated TMPDIR + unique PID namespace markers. Record spawn method in handoff.
+- **Concurrency hardcap:** 16 concurrent agents maximum. tools={*} (every agent receives the full tool surface).
 
 ## Godspeed injection (MANDATORY for every dispatched agent)
 
@@ -182,12 +183,12 @@ When the prompt contains "godspeed" or skill is activated via xbgst:
 
 1. Round 0: spawn planner (godspeed injected, Rust-only).
 2. After plan: name axes (up to 8, each with direction + observable).
-3. Dispatch up to 12 specialists per round (parallel tool calls, each with godspeed injected). **Always include connector.**
+3. Dispatch up to 16 specialists per round (hardcap 16 concurrent agents) (parallel tool calls, each with godspeed injected). **Always include connector.**
 4. Run Pareto filter: evidence gate first (drop moves missing required `evidence:`); then accept remaining moves that improve ≥1 axis and regress none.
 5. Compile round summary.
 6. Exit only when Round N produced zero axis improvements vs Round N-1 or 4 rounds reached.
 
-**Labrat swarm:** up to 12 labrats (grok-4.5-fast-low) in parallel. Fire-and-forget. Each has godspeed + Rust lock.
+**Labrat swarm:** up to 16 labrats (grok-4.5-fast-low) in parallel. Fire-and-forget. Each has godspeed + Rust lock.
 
 **DESPAWN handling:** Acknowledge and release the session slot.
 
