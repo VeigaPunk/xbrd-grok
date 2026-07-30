@@ -10,6 +10,7 @@ Grok-native godspeed orchestrator (`xbgst`).
 - **distiller / scribe / executor / labrat** → grok-4.5-fast-low
 - **Language:** Rust only. No Python.
 - **Spawn:** fnm multishells preferred, pure-bash isolation fallback.
+- **Concurrency hardcap:** 16 concurrent agents. tools={*} for every agent.
 - **Single activation** runs all rounds to frontier; no per-round user prompts.
 
 ## Install
