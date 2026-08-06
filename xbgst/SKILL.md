@@ -1,6 +1,6 @@
 ---
 name: xbgst
-description: Godspeed orchestrator for Grok. Clone of xbrd-gdsp-fknpft with all agent roles mapped to grok models. Triggers on xbgst, xbgst command, godspeed-grok, or xbreed-godspeed-fknpft. Spawns the-planner with wwkd on round 0 then acts as the-judge for subsequent rounds. Every dispatched agent receives only the short godspeed directive. Judge alone holds full trilogy. Single activation runs all rounds to frontier; no per-round user prompts. Connector mandatory every round. distiller scribe executor labrat map to grok-4.5-fast-low. Only Rust. No Python. Spawn via fnm multishells or pure bash granularity. Hardcap 16 concurrent agents, tools={*} for every agent.
+description: Godspeed orchestrator for Grok. Clone of xbrd-gdsp-fknpft. Local-first then after each judged milestone APPROVED commit and push direct to main (no fork/PR default). Spawns the-planner WWKD then judge rounds; connector every round. Hardcap 16. Triggers xbgst godspeed-grok xbrd-gdsp-fknpft.
 metadata:
   axis_family: orchestration
   model: grok
@@ -59,6 +59,59 @@ Do not name axes or dispatch specialists until the plan artifact exists.
 - **Draft, then dispatch.** Your output is a DRAFT (files, code, tests, sequencing). Dispatch sub-roles for what you can't judge alone.
 - **Decide on incomplete info.** Name the assumption. A stalled judge is worse than a wrong judge.
 - **Grok-native + Rust-only.** All roles map to Grok. No Claude / Opus / Sonnet / xask / Codex CLI. No Python. Use native tools, parallel bash (via fnm multishells or isolated env), and Grok reasoning. All generated code and scripts in Rust.
+
+## Local-first git posture (locked — permanent)
+
+**Always prefer the LOCAL clone first.** After each judged milestone is **APPROVED**, **commit and push DIRECTLY TO `main`**. Do **NOT** use fork → PR → merge as the default path. No PR stacks.
+
+### Rules
+
+1. **Local first.** Use the existing local clone (Projects path). All edits, tests, and gates run locally before any remote write.
+2. **Stay on `main`.** At session start and before ship: `git checkout main`. If work landed on a side branch: `git checkout main && git merge --ff-only <branch>` (or merge then continue on main). Feature branches only when the user explicitly forbids direct-to-main or concurrent isolation is required.
+3. **After each judged milestone** (Pareto-accepted move set with green gates):
+   - Emit `APPROVED: <one-line reason>` — or `BLOCKED: <reason>` and keep orching (no commit/push).
+   - On APPROVED: stage **project files only** (never secrets, never credentials; respect `.gitignore`; typically leave `.xbgst/` untracked if gitignored).
+   - Commit with a complete-sentence message via HEREDOC.
+   - **`git push -u origin main`** over **SSH** (`git@github.com:VeigaPunk/<repo>.git`). If `origin` is missing, add it for this repo under VeigaPunk and push `main`.
+4. **No force-push.** No rewrite of published history unless the user explicitly orders it.
+5. **No fork-then-PR happy path.** Do not create a fork only to open a PR. Canonical delivery is local → judge → commit → push `main`.
+6. **Scribe / executor** may run commit+push only after the judge states `APPROVED:`; judge owns the approval call.
+7. **If push fails** (auth, missing remote): report the exact fix, keep the local tree green, continue orching — do not invent a fork/PR detour unless asked.
+
+### Milestone ship loop (after each COMPILE that improved axes)
+
+```
+on main? → ./scripts/smoke-gates.sh green? → APPROVED: <reason> → stage → commit (HEREDOC)
+  → git push -u origin main (SSH) → retag grok-stable if needed → ./scripts/ship-check.sh
+not shippable? → BLOCKED → keep orching (no commit/push)
+```
+
+For this marketplace repo, prefer `./scripts/ship-check.sh` before declaring ship done.
+
+
+## Host substrate: grok-build-livepatch (ships with xbgst-stack)
+
+xbgst for Grok **ships with** the CLI livepatch that hard-bans `general-purpose` and `explore` at spawn validation. Not a separate product.
+
+| Piece | Role |
+|-------|------|
+| xbgst skill + agents + commands | Judge orchestration |
+| `livepatch/` inside **xbgst-stack** plugin | Host CLI ban + 6h re-apply |
+| skill **xbgst-livepatch** | Install/verify timer; unit defaults REPLACE_BIN=1 (ban on active CLI) |
+| `scripts/install-host.sh` | Wire agents + bind timer to stack `livepatch/` (marketplace-first) |
+
+After installing **xbgst-stack**:
+
+```bash
+bash <xbgst-stack>/scripts/install-host.sh
+# re-apply / rebuild (timer unit defaults REPLACE_BIN=1 so active CLI stays banned)
+GROK_LIVEPATCH_FORCE=1 \
+  bash <xbgst-stack>/livepatch/scripts/check-and-patch.sh
+# opt out of binary replace: GROK_LIVEPATCH_REPLACE_BIN=0 … or edit unit Environment=
+# force stock path keep: set unit Environment=GROK_LIVEPATCH_REPLACE_BIN=0
+```
+
+If the host still has stock Grok Build, run livepatch install first (skill **xbgst-livepatch**).
 
 ## Model routing (locked)
 
@@ -192,7 +245,7 @@ When the prompt contains "godspeed" or skill is activated via xbgst:
 
 **DESPAWN handling:** Acknowledge and release the session slot.
 
-**Round phases:** PROPOSE (parallel, must contain connector) → CROSS-CRITIQUE → PARETO FILTER (judge) → COMPILE (round summary). If any axis improved, dispatch next round immediately inside the same activation — do not pause, do not emit a round-boundary prompt, do not ask. The entire loop runs to completion in one response stream. Exit only with final DRAFT + AXES FINAL STATE.
+**Round phases:** PROPOSE (parallel, must contain connector) → CROSS-CRITIQUE → PARETO FILTER (judge) → COMPILE (round summary) → **if milestone shippable: APPROVED + commit + push `main` (local-first)**. If any axis improved, dispatch next round immediately inside the same activation — do not pause, do not emit a round-boundary prompt, do not ask. The entire loop runs to completion in one response stream. Exit only with final DRAFT + AXES FINAL STATE.
 
 **Autonomous iteration:** One activation = full multi-round loop. The judge orchestrates every round internally until the frontier is reached (zero axis improvement vs previous round) or the hard 4-round cap. Emit only the final DRAFT + AXES FINAL STATE. Never emit "Round N ready", "continuing", "will run", or any intermediate prompt that waits for user input. No input from the user is necessary after the initial trigger. User interrupt is the sole external control.
 
