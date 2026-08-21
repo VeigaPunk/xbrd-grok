@@ -9,11 +9,11 @@ This repo stays a thin, paste-friendly mirror of `plugins/xbgst-stack/skills/xbg
 
 ## Hard locks
 
-- **Subagents** receive ONLY the short godspeed directive (4 rules + concurrent tools + Rust lock).
+- **Subagents** receive ONLY the short godspeed directive (4 rules + concurrent tools + match-repo; no Rust lock).
 - **Judge (xbgst)** alone runs the full trilogy (directive + filter + velocity).
 - **Connector** mandatory every round.
 - **distiller / scribe / executor / labrat** → grok-4.5-fast-low
-- **Language:** Rust only. No Python.
+- **Language:** Match the repo. No language lock. Prefer the stack already in-tree.
 - **Concurrency hardcap:** 16 concurrent Grok agents. tools={*} for every agent.
 - **Single activation** runs all rounds to frontier; no per-round user prompts.
 - **Local-first ship:** after each judged milestone `APPROVED` → commit + push **direct to `main`** (no fork/PR default).
@@ -21,13 +21,27 @@ This repo stays a thin, paste-friendly mirror of `plugins/xbgst-stack/skills/xbg
 
 ## Install (recommended)
 
+Canonical install is **grok-marketplace** `xbgst-stack`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/VeigaPunk/grok-marketplace/main/scripts/install-xbgst-stack.sh | bash
+```
+
+Pinned channel (optional):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/VeigaPunk/grok-marketplace/grok-stable/scripts/install-xbgst-stack.sh | bash
+```
+
+Manual equivalent:
+
 ```bash
 grok plugin marketplace add VeigaPunk/grok-marketplace
 grok plugin install xbgst-stack@veigapunk/grok-marketplace --trust
 bash ~/.grok/installed-plugins/xbgst-stack-*/scripts/install-host.sh
 ```
 
-## Skill-only install (this repo)
+## Skill-only install (this repo — secondary)
 
 ```bash
 mkdir -p ~/.grok/skills/xbgst
