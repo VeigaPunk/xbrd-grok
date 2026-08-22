@@ -9,12 +9,12 @@ This repo stays a thin, paste-friendly mirror of `plugins/xbgst-stack/skills/xbg
 
 ## Hard locks
 
-- **Subagents** receive ONLY the short godspeed directive (4 rules + concurrent tools + match-repo; no Rust lock).
+- **Subagents** receive ONLY the byte-exact canonical godspeed directive plus their task; every initial and follow-up dispatch ends exactly once with `| godspeed`.
 - **Judge (xbgst)** alone runs the full trilogy (directive + filter + velocity).
 - **Connector** mandatory every round.
 - **distiller / scribe / executor / labrat** → grok-4.5-fast-low
 - **Language:** Match the repo. No language lock. Prefer the stack already in-tree.
-- **Concurrency hardcap:** 16 concurrent Grok agents. tools={*} for every agent.
+- **Concurrency:** host-governed with no smaller package-level cap; this distribution is certified at 64 concurrent agents. tools={*} for every agent.
 - **Single activation** runs all rounds to frontier; no per-round user prompts.
 - **Local-first ship:** after each judged milestone `APPROVED` → commit + push **direct to `main`** (no fork/PR default).
 - **Host substrate:** CLI livepatch that bans `general-purpose` / `explore` ships inside **xbgst-stack**.
@@ -57,7 +57,7 @@ You still need agent profiles + livepatch from **xbgst-stack** for full speciali
 |-------|----------|
 | Marketplace SSoT | https://github.com/VeigaPunk/grok-marketplace |
 | Channel tag | `grok-stable` |
-| L3 swarm substrate | `sekhmet` / `~/Projects/xbrd-spark` (gpt-5.6-luna + fast + effort low) |
+| L3 swarm substrate | `sekhmet` / `xbrd-spark` (primary `gpt-5.3-codex-spark`, fallback `gpt-5.6-luna`) — `~/Projects/xbgst/xbrd-spark` |
 | Skill source in marketplace | `plugins/xbgst-stack/skills/xbgst/SKILL.md` |
 
 Repo: https://github.com/VeigaPunk/xbrd-grok
